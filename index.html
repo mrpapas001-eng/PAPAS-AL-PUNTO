@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Papas al Punto - Pedido</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 480px;
+      width: 100%;
+      background: #ffffff;
+      margin: 16px;
+      padding: 20px 18px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 4px;
+      text-align: center;
+      color: #222;
+    }
+    h2 {
+      font-size: 0.95rem;
+      margin: 0 0 16px;
+      text-align: center;
+      color: #777;
+      font-weight: 400;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: #444;
+    }
+    input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #f7b500;
+      box-shadow: 0 0 0 1px rgba(247,181,0,0.3);
+    }
+    .products {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      background: #fffdf5;
+    }
+    .product-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .product-row span {
+      flex: 1;
+      font-size: 0.85rem;
+    }
+    .product-row small {
+      display: block;
+      font-size: 0.75rem;
+      color: #777;
+    }
+    .product-row input[type="number"] {
+      width: 90px;
+      margin-bottom: 0;
+    }
+    .hint {
+      font-size: 0.78rem;
+      color: #999;
+      margin-bottom: 8px;
+    }
+    .summary {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #f7fbff;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
+    .summary strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 11px 10px;
+      border-radius: 999px;
+      border: none;
+      background: #25d366;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    button:hover {
+      background: #1ebe5b;
+    }
+    .whatsapp-icon {
+      font-size: 1.1rem;
+    }
+    .footer-note {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: #aaa;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Papas al Punto</h1>
+    <h2>Haz tu pedido rápido y recíbelo por ruta</h2>
+
+    <form id="pedidoForm">
+      <label for="negocio">Nombre del negocio *</label>
+      <input type="text" id="negocio" required />
+
+      <label for="contacto">Nombre de contacto *</label>
+      <input type="text" id="contacto" required />
+
+      <label for="telefono">Teléfono del negocio</label>
+      <input type="tel" id="telefono" placeholder="Opcional" />
+
+      <label for="direccion">Dirección *</label>
+      <input type="text" id="direccion" required />
+
+      <div class="products">
+        <strong style="font-size:0.9rem;">Productos (kg)</strong>
+        <p class="hint">Ingresa cuántos kilos quieres de cada producto.</p>
+
+        <div class="product-row">
+          <span>
+            Papa capira bastón
+            <small>$6.000 / kg</small>
+          </span>
+          <input type="number" id="capira" min="0" step="1" value="0" />
+        </div>
+
+        <div class="product-row">
+          <span>
+            Papa capira bastón sabor queso
+            <small>$8.000 / kg</small>
+          </span>
+          <input type="number" id="capiraQueso" min="0" step="1" value="0" />
+        </div>
+
+        <div class="product-row">
+          <span>
+            Papa criolla
+            <small>$15.000 / kg</small>
+          </span>
+          <input type="number" id="criolla" min="0" step="1" value="0" />
+        </div>
+
+        <div class="product-row">
+          <span>
+            Plátano maduro bastón
+            <small>$7.500 / kg</small>
+          </span>
+          <input type="number" id="platano" min="0" step="1" value="0" />
+        </div>
+      </div>
+
+      <div class="summary">
+        <strong>Resumen del pedido</strong>
+        <div id="resumenKilos">Total kilos: 0 kg</div>
+        <div id="resumenValor">Valor estimado: $0</div>
+      </div>
+
+      <label for="fecha">Fecha deseada de entrega *</label>
+      <input type="date" id="fecha" required />
+
+      <label for="comentarios">Comentarios / instrucciones</label>
+      <textarea id="comentarios" rows="3" placeholder="Ej: horario de entrega, punto de referencia, etc."></textarea>
+
+      <button type="submit">
+        <span class="whatsapp-icon">🟢</span>
+        Enviar pedido por WhatsApp
+      </button>
+
+      <p class="footer-note">
+        Pedido mínimo: $50.000. Puedes mezclar todos los productos para completar el pedido.
+      </p>
+    </form>
+  </div>
+
+  <script>
+    const PRECIO_CAPIRA = 6000;
+    const PRECIO_CAPIRA_QUESO = 8000;
+    const PRECIO_CRIOLLA = 15000;
+    const PRECIO_PLATANO = 7500;
+    const PEDIDO_MINIMO = 50000;
+
+    function formatCOP(valor) {
+      return valor.toLocaleString("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0
+      });
+    }
+
+    function calcularResumen() {
+      const capira = parseInt(document.getElementById("capira").value || "0", 10);
+      const capiraQueso = parseInt(document.getElementById("capiraQueso").value || "0", 10);
+      const criolla = parseInt(document.getElementById("criolla").value || "0", 10);
+      const platano = parseInt(document.getElementById("platano").value || "0", 10);
+
+      const totalKilos = capira + capiraQueso + criolla + platano;
+
+      const totalValor =
+        (capira * PRECIO_CAPIRA) +
+        (capiraQueso * PRECIO_CAPIRA_QUESO) +
+        (criolla * PRECIO_CRIOLLA) +
+        (platano * PRECIO_PLATANO);
+
+      document.getElementById("resumenKilos").textContent =
+        "Total kilos: " + totalKilos + " kg";
+
+      document.getElementById("resumenValor").textContent =
+        "Valor estimado: " + formatCOP(totalValor);
+
+      return { totalKilos, totalValor };
+    }
+
+    ["capira", "capiraQueso", "criolla", "platano"].forEach(id => {
+      document.getElementById(id).addEventListener("input", calcularResumen);
+    });
+
+    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const negocio = document.getElementById("negocio").value.trim();
+      const contacto = document.getElementById("contacto").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const direccion = document.getElementById("direccion").value.trim();
+
+      const capira = parseInt(document.getElementById("capira").value || "0");
+      const capiraQueso = parseInt(document.getElementById("capiraQueso").value || "0");
+      const criolla = parseInt(document.getElementById("criolla").value || "0");
+      const platano = parseInt(document.getElementById("platano").value || "0");
+
+      const fecha = document.getElementById("fecha").value;
+      const comentarios = document.getElementById("comentarios").value.trim();
+
+      if (!negocio || !contacto || !direccion || !fecha) {
+        alert("Por favor completa los campos obligatorios.");
+        return;
+      }
+
+      const { totalValor } = calcularResumen();
+
+      if (capira === 0 && capiraQueso === 0 && criolla === 0 && platano === 0) {
+        alert("Por favor ingresa al menos 1 kg.");
+        return;
+      }
+
+      if (totalValor < PEDIDO_MINIMO) {
+        alert("El pedido mínimo es " + formatCOP(PEDIDO_MINIMO));
+        return;
+      }
+
+      let productos = "";
+      if (capira > 0) productos += `- Papa capira bastón: ${capira} kg\n`;
+      if (capiraQueso > 0) productos += `- Papa capira bastón sabor queso: ${capiraQueso} kg\n`;
+      if (criolla > 0) productos += `- Papa criolla: ${criolla} kg\n`;
+      if (platano > 0) productos += `- Plátano maduro bastón: ${platano} kg\n`;
+
+      const fechaTexto = new Date(fecha + "T00:00:00").toLocaleDateString("es-CO");
+
+      let mensaje = `🧾 *Nuevo pedido Papas al Punto*\n\n`;
+      mensaje += `🏪 Negocio: ${negocio}\n`;
+      mensaje += `👤 Contacto: ${contacto}\n`;
+      if (telefono) mensaje += `📞 Teléfono: ${telefono}\n`;
+      mensaje += `📍 Dirección: ${direccion}\n\n`;
+      mensaje += `🥔 Productos:\n${productos}\n`;
+      mensaje += `💰 Valor: ${formatCOP(totalValor)}\n\n`;
+      mensaje += `📅 Entrega: ${fechaTexto}\n`;
+      if (comentarios) mensaje += `📝 ${comentarios}\n`;
+
+      const numero = "573145274782";
+      const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
+      window.location.href = url;
+    });
+
+    calcularResumen();
+  </script>
+</body>
+</html>
