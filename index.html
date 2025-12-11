@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -128,6 +130,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Papas al Punto</h1>
@@ -151,34 +154,22 @@
         <p class="hint">Ingresa cuántos kilos quieres de cada producto.</p>
 
         <div class="product-row">
-          <span>
-            Papa capira bastón
-            <small>$6.000 / kg</small>
-          </span>
+          <span>Papa capira bastón <small>$6.000 / kg</small></span>
           <input type="number" id="capira" min="0" step="1" value="0" />
         </div>
 
         <div class="product-row">
-          <span>
-            Papa capira bastón sabor queso
-            <small>$8.000 / kg</small>
-          </span>
+          <span>Papa capira bastón sabor queso <small>$8.000 / kg</small></span>
           <input type="number" id="capiraQueso" min="0" step="1" value="0" />
         </div>
 
         <div class="product-row">
-          <span>
-            Papa criolla
-            <small>$15.000 / kg</small>
-          </span>
+          <span>Papa criolla <small>$15.000 / kg</small></span>
           <input type="number" id="criolla" min="0" step="1" value="0" />
         </div>
 
         <div class="product-row">
-          <span>
-            Plátano maduro bastón
-            <small>$7.500 / kg</small>
-          </span>
+          <span>Plátano maduro bastón <small>$7.500 / kg</small></span>
           <input type="number" id="platano" min="0" step="1" value="0" />
         </div>
       </div>
@@ -222,24 +213,20 @@
     }
 
     function calcularResumen() {
-      const capira = parseInt(document.getElementById("capira").value || "0", 10);
-      const capiraQueso = parseInt(document.getElementById("capiraQueso").value || "0", 10);
-      const criolla = parseInt(document.getElementById("criolla").value || "0", 10);
-      const platano = parseInt(document.getElementById("platano").value || "0", 10);
+      const capira = parseInt(document.getElementById("capira").value || "0");
+      const capiraQueso = parseInt(document.getElementById("capiraQueso").value || "0");
+      const criolla = parseInt(document.getElementById("criolla").value || "0");
+      const platano = parseInt(document.getElementById("platano").value || "0");
 
       const totalKilos = capira + capiraQueso + criolla + platano;
-
       const totalValor =
-        (capira * PRECIO_CAPIRA) +
-        (capiraQueso * PRECIO_CAPIRA_QUESO) +
-        (criolla * PRECIO_CRIOLLA) +
-        (platano * PRECIO_PLATANO);
+        capira * PRECIO_CAPIRA +
+        capiraQueso * PRECIO_CAPIRA_QUESO +
+        criolla * PRECIO_CRIOLLA +
+        platano * PRECIO_PLATANO;
 
-      document.getElementById("resumenKilos").textContent =
-        "Total kilos: " + totalKilos + " kg";
-
-      document.getElementById("resumenValor").textContent =
-        "Valor estimado: " + formatCOP(totalValor);
+      document.getElementById("resumenKilos").textContent = "Total kilos: " + totalKilos + " kg";
+      document.getElementById("resumenValor").textContent = "Valor estimado: " + formatCOP(totalValor);
 
       return { totalKilos, totalValor };
     }
@@ -248,31 +235,30 @@
       document.getElementById(id).addEventListener("input", calcularResumen);
     });
 
-    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+    document.getElementById("pedidoForm").addEventListener("submit", e => {
       e.preventDefault();
 
       const negocio = document.getElementById("negocio").value.trim();
       const contacto = document.getElementById("contacto").value.trim();
       const telefono = document.getElementById("telefono").value.trim();
       const direccion = document.getElementById("direccion").value.trim();
+      const fecha = document.getElementById("fecha").value;
+      const comentarios = document.getElementById("comentarios").value.trim();
 
       const capira = parseInt(document.getElementById("capira").value || "0");
       const capiraQueso = parseInt(document.getElementById("capiraQueso").value || "0");
       const criolla = parseInt(document.getElementById("criolla").value || "0");
       const platano = parseInt(document.getElementById("platano").value || "0");
 
-      const fecha = document.getElementById("fecha").value;
-      const comentarios = document.getElementById("comentarios").value.trim();
+      const { totalValor } = calcularResumen();
 
       if (!negocio || !contacto || !direccion || !fecha) {
         alert("Por favor completa los campos obligatorios.");
         return;
       }
 
-      const { totalValor } = calcularResumen();
-
-      if (capira === 0 && capiraQueso === 0 && criolla === 0 && platano === 0) {
-        alert("Por favor ingresa al menos 1 kg.");
+      if (capira + capiraQueso + criolla + platano === 0) {
+        alert("Debes pedir al menos 1 kg.");
         return;
       }
 
@@ -289,18 +275,20 @@
 
       const fechaTexto = new Date(fecha + "T00:00:00").toLocaleDateString("es-CO");
 
-      let mensaje = `🧾 *Nuevo pedido Papas al Punto*\n\n`;
-      mensaje += `🏪 Negocio: ${negocio}\n`;
-      mensaje += `👤 Contacto: ${contacto}\n`;
-      if (telefono) mensaje += `📞 Teléfono: ${telefono}\n`;
-      mensaje += `📍 Dirección: ${direccion}\n\n`;
-      mensaje += `🥔 Productos:\n${productos}\n`;
-      mensaje += `💰 Valor: ${formatCOP(totalValor)}\n\n`;
-      mensaje += `📅 Entrega: ${fechaTexto}\n`;
-      if (comentarios) mensaje += `📝 ${comentarios}\n`;
+      let mensaje =
+        `🧾 *Nuevo pedido Papas al Punto*\n\n` +
+        `🏪 Negocio: ${negocio}\n` +
+        `👤 Contacto: ${contacto}\n` +
+        (telefono ? `📞 Teléfono: ${telefono}\n` : "") +
+        `📍 Dirección: ${direccion}\n\n` +
+        `🥔 Productos:\n${productos}\n` +
+        `💰 Valor total: ${formatCOP(totalValor)}\n\n` +
+        `📅 Fecha de entrega: ${fechaTexto}\n` +
+        (comentarios ? `📝 ${comentarios}\n` : "");
 
       const numero = "573145274782";
       const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
+
       window.location.href = url;
     });
 
